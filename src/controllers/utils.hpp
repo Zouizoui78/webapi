@@ -17,7 +17,7 @@ template <typename T>
 std::optional<T> parse_entity_from_body(const httplib::Request &req,
                                         httplib::Response &res) {
   try {
-    return nlohmann::json::parse(req.body);
+    return nlohmann::json::parse(req.body).get<T>();
   } catch (const nlohmann::json::exception &e) {
     res.set_content(std::format("Failed to parse json: {}", e.what()),
                     "text/plain");

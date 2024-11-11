@@ -46,9 +46,9 @@ target_link_libraries(webapi PRIVATE httplib::httplib)
 find_package(jwt-cpp CONFIG REQUIRED)
 target_link_libraries(webapi PRIVATE jwt-cpp::jwt-cpp)
 
-set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(webapi PRIVATE nlohmann_json::nlohmann_json)
+set(nlohmann-json_IMPLICIT_CONVSIONS OFF)
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 target_link_libraries(webapi PRIVATE unofficial::sqlite3::sqlite3)
