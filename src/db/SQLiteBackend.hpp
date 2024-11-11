@@ -23,7 +23,7 @@ public:
                     const std::vector<std::string> &columns);
 
   // Return 0 if no insertion has been made since the creation of the connection
-  // to the db
+  // to the db.
   IDType get_table_last_id(std::string_view table_name) const;
 
   std::string_view get_last_error() const;

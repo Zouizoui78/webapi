@@ -16,16 +16,17 @@ set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake" 
 project(webapi)
 
 set(SRC
-    src/main.cpp
     src/HTTPServer.hpp
     src/HTTPServer.cpp
+    src/main.cpp
     src/typedefs.hpp
     src/db/SQLiteBackend.hpp
     src/db/SQLiteBackend.cpp
     src/entities/Person.hpp
-    src/repositories/IPersonRepository.hpp
     src/repositories/PersonRepository.hpp
     src/repositories/PersonRepository.cpp
+    src/services/PersonService.hpp
+    src/services/PersonService.cpp
 )
 
 add_executable(webapi ${SRC})
