@@ -3,6 +3,6 @@
 
 #include <cstdint>
 
-using IDType = uint64_t;
+using IDType = int64_t;
 
 #endif

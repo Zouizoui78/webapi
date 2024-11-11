@@ -17,7 +17,13 @@ project(webapi)
 
 set(SRC
     src/main.cpp
-    src/repositories/SQLiteRepository.cpp
+    src/db/SQLiteBackend.hpp
+    src/db/SQLiteBackend.cpp
+    src/entities/Entity.hpp
+    src/entities/Person.hpp
+    src/repositories/IPersonRepository.hpp
+    src/repositories/PersonRepository.hpp
+    src/repositories/PersonRepository.cpp
 )
 
 add_executable(webapi ${SRC})
@@ -34,3 +40,6 @@ target_link_libraries(webapi PRIVATE jwt-cpp::jwt-cpp)
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(webapi PRIVATE nlohmann_json::nlohmann_json)
+
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+target_link_libraries(webapi PRIVATE unofficial::sqlite3::sqlite3)

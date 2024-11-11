@@ -10,6 +10,7 @@
         {
             "name": "nlohmann-json",
             "default-features": false
-        }
+        },
+        "sqlite3"
     ]
 }
