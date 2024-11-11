@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div>
+        <label for="method-select">Method:</label>
+        <select name="method" id="method-select">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="route-input">/api/</label>
+        <input type="text" id="route-input" name="route"></input>
+    </div>
+
+    <div>
+        <label for="data-input">Data:</label>
+        <textarea id="data-input" name="data" rows="20" cols="50">
+{
+    "id": 1,
+    "firstname": "FirstName",
+    "lastname": "LastName",
+    "age": 25
+}</textarea>
+    </div>
+
+    <div>
+        <button id="send-button">Send</button>
+    </div>
+
+    <div>
+        <label for="response-text">Response:</label>
+        <textarea id="response-text" name="res" rows="20" cols="50" disabled="true"></textarea>
+    </div>
+</body>
+
+<script src="js/index.js"></script>
+
+</html>
