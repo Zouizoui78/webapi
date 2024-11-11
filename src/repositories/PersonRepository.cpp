@@ -29,10 +29,12 @@ std::optional<IDType> PersonRepository::create(const entities::Person &person) {
 
 std::optional<entities::Person> PersonRepository::read(IDType id) {
   Person p;
-  std::string stmt = std::format("SELECT * from {} WHERE id = {};", _name, id);
+  std::string stmt = std::format("SELECT * FROM {} WHERE id = {};", _name, id);
   int res = _backend->query(stmt, [&p](sqlite3_stmt *stmt) {
+    p.id = sqlite3_column_int64(stmt, 0);
     p.first_name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
     p.last_name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+    p.age = sqlite3_column_int(stmt, 3);
   });
 
   if (res == -1) {

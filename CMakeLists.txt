@@ -20,6 +20,9 @@ set(SRC
     src/HTTPServer.cpp
     src/main.cpp
     src/typedefs.hpp
+    src/controllers/IController.hpp
+    src/controllers/PersonController.hpp
+    src/controllers/PersonController.cpp
     src/db/SQLiteBackend.hpp
     src/db/SQLiteBackend.cpp
     src/entities/Person.hpp

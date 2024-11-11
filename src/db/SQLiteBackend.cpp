@@ -16,6 +16,7 @@ SQLiteBackend::SQLiteBackend(std::string_view db_path) : _db_path(db_path) {
                       _db_path.c_str(), sqlite3_errmsg(handle)));
     }
     _handle = std::unique_ptr<sqlite3, Sqlite3Deleter>(handle);
+    std::println("db: Opened database '{}'", _db_path);
   }
 }
 

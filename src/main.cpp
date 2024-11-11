@@ -3,6 +3,9 @@
 #include <functional>
 #include <iostream>
 
+#include "HTTPServer.hpp"
+
+#include "controllers/PersonController.hpp"
 #include "db/SQLiteBackend.hpp"
 #include "repositories/PersonRepository.hpp"
 #include "services/PersonService.hpp"
@@ -21,21 +24,19 @@ int main(void) {
   repositories::PersonRepository person_repo(&sqlite);
   services::PersonService person_service(&person_repo);
 
-  entities::Person p;
-  p.first_name = "Myfirstname";
-  p.last_name = "Mylastname";
-  p.age = 50;
-  auto id = person_service.create(p);
+  HTTPServer server("www");
+  server.register_controller(
+      std::make_unique<controllers::PersonController>(&person_service));
 
-  if (id.has_value()) {
-    std::println("new id = {}", *id);
-  }
-
-  signal_handler = [](int signal) {
-    std::cout << "Received signal " << strsignal(signal) << std::endl;
+  signal_handler = [&server](int signal) {
+    std::println("main: Received signal '{}'", strsignal(signal));
     if (signal == SIGINT || signal == SIGTERM) {
+      server.stop();
+      std::println("main: Stopped HTTP server");
     }
   };
+
+  server.listen("0.0.0.0", 3000);
 
   return 0;
 }
