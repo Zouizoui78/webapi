@@ -18,8 +18,9 @@ int main(void) {
   repositories::PersonRepository person_repo(&sqlite);
 
   entities::Person p;
-  p.first_name = "Alexandre";
-  p.last_name = "Zouiten";
+  p.first_name = "Myfirstname";
+  p.last_name = "Mylastname";
+  p.age = 50;
   auto id = person_repo.create(p);
 
   if (id.has_value()) {

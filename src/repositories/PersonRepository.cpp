@@ -8,15 +8,16 @@ using namespace entities;
 
 PersonRepository::PersonRepository(db::SQLiteBackend *backend)
     : _backend(backend) {
-  _backend->create_table("person", {"firstname STRING", "lastname STRING"});
+  _backend->create_table(
+      "person", {"firstname STRING", "lastname STRING", "age INTEGER"});
 }
 
 std::optional<IDType> PersonRepository::create(const entities::Person &person) {
   std::string statement =
       std::format("INSERT INTO {} "
-                  "(firstname, lastname) "
-                  "VALUES('{}', '{}');",
-                  _name, person.first_name, person.last_name);
+                  "(firstname, lastname, age) "
+                  "VALUES('{}', '{}', '{}');",
+                  _name, person.first_name, person.last_name, person.age);
   int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
 
   if (res == -1) {
@@ -42,11 +43,11 @@ std::optional<entities::Person> PersonRepository::read(IDType id) {
 }
 
 bool PersonRepository::update(IDType id, const entities::Person &person) {
-  std::string statement =
-      std::format("UPDATE {} "
-                  "SET id = '{}', firstname = '{}', lastname = '{}' "
-                  "WHERE id = {};",
-                  _name, person.id, person.first_name, person.last_name, id);
+  std::string statement = std::format(
+      "UPDATE {} "
+      "SET id = '{}', firstname = '{}', lastname = '{}', age = '{}'"
+      "WHERE id = {};",
+      _name, person.id, person.first_name, person.last_name, person.age, id);
   int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
 
   if (res == -1) {
