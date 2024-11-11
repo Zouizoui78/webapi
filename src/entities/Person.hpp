@@ -5,7 +5,7 @@
 
 #include "typedefs.hpp"
 
-namespace entities {
+namespace webapi::entities {
 
 struct Person {
   IDType id = 0;
@@ -14,6 +14,6 @@ struct Person {
   int age = 0;
 };
 
-} // namespace entities
+} // namespace webapi::entities
 
 #endif

@@ -10,6 +10,8 @@ std::function<void(int)> signal_handler;
 void c_signal_handler(int signal) { signal_handler(signal); }
 
 int main(void) {
+  using namespace webapi;
+
   for (int i = 0; i < NSIG; i++) {
     signal(i, c_signal_handler);
   }

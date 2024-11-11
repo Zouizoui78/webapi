@@ -9,7 +9,7 @@
 #include "sqlite3.h"
 #include "typedefs.hpp"
 
-namespace db {
+namespace webapi::db {
 
 class SQLiteBackend final {
 public:
@@ -72,6 +72,6 @@ private:
   std::string _db_path;
 };
 
-} // namespace db
+} // namespace webapi::db
 
 #endif

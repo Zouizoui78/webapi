@@ -5,7 +5,7 @@
 #include "db/SQLiteBackend.hpp"
 #include "entities/Person.hpp"
 
-namespace repositories {
+namespace webapi::repositories {
 
 class PersonRepository final : public IPersonRepository {
 public:
@@ -21,6 +21,6 @@ private:
   std::string _name = "person";
 };
 
-} // namespace repositories
+} // namespace webapi::repositories
 
 #endif

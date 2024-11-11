@@ -6,7 +6,7 @@
 
 #include "entities/Person.hpp"
 
-namespace repositories {
+namespace webapi::repositories {
 
 class IPersonRepository {
 public:
@@ -23,6 +23,6 @@ public:
   IPersonRepository &operator=(IPersonRepository &&other) = delete;
 };
 
-} // namespace repositories
+} // namespace webapi::repositories
 
 #endif

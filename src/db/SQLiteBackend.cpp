@@ -3,7 +3,7 @@
 #include <format>
 #include <stdexcept>
 
-namespace db {
+namespace webapi::db {
 
 SQLiteBackend::SQLiteBackend(std::string_view db_path) : _db_path(db_path) {
   if (_handle == nullptr) {
@@ -62,4 +62,4 @@ void SQLiteBackend::Sqlite3Deleter::operator()(sqlite3 *handle) {
   std::println("db: Closed database");
 }
 
-} // namespace db
+} // namespace webapi::db

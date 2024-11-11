@@ -2,7 +2,7 @@
 
 #include <format>
 
-namespace repositories {
+namespace webapi::repositories {
 
 using namespace entities;
 
@@ -70,4 +70,4 @@ bool PersonRepository::remove(IDType id) {
   return _backend->get_table_last_id(_name);
 }
 
-} // namespace repositories
+} // namespace webapi::repositories

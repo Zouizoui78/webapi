@@ -3,6 +3,10 @@
 
 #include <cstdint>
 
+namespace webapi {
+
 using IDType = int64_t;
+
+}
 
 #endif

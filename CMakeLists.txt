@@ -17,9 +17,11 @@ project(webapi)
 
 set(SRC
     src/main.cpp
+    src/HTTPServer.hpp
+    src/HTTPServer.cpp
+    src/typedefs.hpp
     src/db/SQLiteBackend.hpp
     src/db/SQLiteBackend.cpp
-    src/entities/Entity.hpp
     src/entities/Person.hpp
     src/repositories/IPersonRepository.hpp
     src/repositories/PersonRepository.hpp
