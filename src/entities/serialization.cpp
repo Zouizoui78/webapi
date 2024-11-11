@@ -2,14 +2,16 @@
 
 namespace webapi::entities {
 
-void to_json(nlohmann::json &j, const Person &p) {
-  j = nlohmann::json{{"id", p.id},
-                     {"firstname", p.firstname},
-                     {"lastname", p.lastname},
-                     {"age", p.age}};
+using namespace nlohmann;
+
+void to_json(json &j, const Person &p) {
+  j = json{{"id", p.id},
+           {"firstname", p.firstname},
+           {"lastname", p.lastname},
+           {"age", p.age}};
 }
 
-void from_json(const nlohmann::json &j, Person &p) {
+void from_json(const json &j, Person &p) {
   if (j.contains("id")) {
     j.at("id").get_to(p.id);
   }
