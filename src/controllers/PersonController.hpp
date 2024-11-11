@@ -16,7 +16,10 @@ public:
   void register_routes(HTTPServer *server) override;
 
 private:
+  void create(const httplib::Request &req, httplib::Response &res) const;
   void read(const httplib::Request &req, httplib::Response &res) const;
+  void update(const httplib::Request &req, httplib::Response &res) const;
+  void remove(const httplib::Request &req, httplib::Response &res) const;
 
   services::PersonService *_service = nullptr;
 };

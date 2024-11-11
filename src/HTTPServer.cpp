@@ -9,9 +9,16 @@ using namespace controllers;
 
 HTTPServer::HTTPServer(std::string_view web_ui_path) {
   set_mount_point("/", std::string(web_ui_path));
-  set_pre_routing_handler([](const httplib::Request &req,
-                             httplib::Response &res) {
-    std::println("http: {} {}", req.method, req.path, req.path_params.size());
+
+  set_pre_routing_handler(
+      [](const httplib::Request &req, httplib::Response &res) {
+        std::println("http: {} {}", req.method, req.path);
+        return Server::HandlerResponse::Unhandled;
+      });
+
+  set_post_routing_handler([](const httplib::Request &req,
+                              httplib::Response &res) {
+    std::println("http: {} {} status = {}", req.method, req.path, res.status);
     return Server::HandlerResponse::Unhandled;
   });
 }

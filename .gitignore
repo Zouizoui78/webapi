@@ -88,3 +88,5 @@ dkms.conf
 
 build
 external
+*.db
+.vscode

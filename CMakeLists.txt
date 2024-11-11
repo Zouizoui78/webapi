@@ -23,9 +23,12 @@ set(SRC
     src/controllers/IController.hpp
     src/controllers/PersonController.hpp
     src/controllers/PersonController.cpp
+    src/controllers/utils.hpp
+    src/controllers/utils.cpp
     src/db/SQLiteBackend.hpp
     src/db/SQLiteBackend.cpp
     src/entities/Person.hpp
+    src/entities/serialization.cpp
     src/repositories/PersonRepository.hpp
     src/repositories/PersonRepository.cpp
     src/services/PersonService.hpp

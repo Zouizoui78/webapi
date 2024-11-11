@@ -10,12 +10,13 @@ namespace webapi::entities {
 
 struct Person {
   IDType id = 0;
-  std::string first_name = "";
-  std::string last_name = "";
+  std::string firstname = "";
+  std::string lastname = "";
   int age = 0;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Person, id, first_name, last_name, age);
+void to_json(nlohmann::json &j, const Person &p);
+void from_json(const nlohmann::json &j, Person &p);
 
 } // namespace webapi::entities
 

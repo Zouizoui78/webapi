@@ -17,7 +17,7 @@ std::optional<IDType> PersonRepository::create(const entities::Person &person) {
       std::format("INSERT INTO {} "
                   "(firstname, lastname, age) "
                   "VALUES('{}', '{}', '{}');",
-                  _name, person.first_name, person.last_name, person.age);
+                  _name, person.firstname, person.lastname, person.age);
   int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
 
   if (res == -1) {
@@ -32,8 +32,8 @@ std::optional<entities::Person> PersonRepository::read(IDType id) {
   std::string stmt = std::format("SELECT * FROM {} WHERE id = {};", _name, id);
   int res = _backend->query(stmt, [&p](sqlite3_stmt *stmt) {
     p.id = sqlite3_column_int64(stmt, 0);
-    p.first_name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
-    p.last_name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+    p.firstname = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+    p.lastname = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
     p.age = sqlite3_column_int(stmt, 3);
   });
 
@@ -49,27 +49,19 @@ bool PersonRepository::update(IDType id, const entities::Person &person) {
       "UPDATE {} "
       "SET id = '{}', firstname = '{}', lastname = '{}', age = '{}'"
       "WHERE id = {};",
-      _name, person.id, person.first_name, person.last_name, person.age, id);
+      _name, person.id, person.firstname, person.lastname, person.age, id);
+
   int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
-
-  if (res == -1) {
-    return false;
-  }
-
-  return _backend->get_table_last_id(_name);
+  return res != -1;
 }
 
 bool PersonRepository::remove(IDType id) {
   std::string statement = std::format("DELETE FROM {} "
                                       "WHERE id = {};",
                                       _name, id);
+
   int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
-
-  if (res == -1) {
-    return false;
-  }
-
-  return _backend->get_table_last_id(_name);
+  return res != -1;
 }
 
 } // namespace webapi::repositories
