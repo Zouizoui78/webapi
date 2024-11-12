@@ -2,6 +2,7 @@
 
 #include "HTTPServer.hpp"
 #include "PersonController.hpp"
+#include "Result.hpp"
 #include "utils.hpp"
 
 namespace webapi::controllers {
@@ -35,14 +36,12 @@ void PersonController::create(const httplib::Request &req,
     return;
   }
 
-  std::optional<IDType> p_id = _service->create(*p);
-  if (!p_id.has_value()) {
-    res.set_content("Failed to create person entity", "text/plain");
-    res.status = StatusCode::BadRequest_400;
+  auto result = _service->create(*p);
+  if (handle_result(result, res)) {
     return;
   }
 
-  p->id = *p_id;
+  p->id = result.value.value();
   res.set_content(json(*p).dump(), "application/json");
 }
 
@@ -53,13 +52,12 @@ void PersonController::read(const httplib::Request &req,
     return;
   }
 
-  auto p = _service->read(*id);
-  if (!p.has_value()) {
-    res.status = StatusCode::NotFound_404;
+  auto result = _service->read(*id);
+  if (handle_result(result, res)) {
     return;
   }
 
-  res.set_content(json(*p).dump(), "application/json");
+  res.set_content(json(result.value.value()).dump(), "application/json");
 }
 
 void PersonController::update(const httplib::Request &req,
@@ -74,12 +72,8 @@ void PersonController::update(const httplib::Request &req,
     return;
   }
 
-  if (!_service->update(*id, *p)) {
-    res.set_content(std::format("Failed to update person entity {}", *id),
-                    "text/plain");
-    res.status = StatusCode::BadRequest_400;
-    return;
-  }
+  auto result = _service->update(*id, *p);
+  handle_result(result, res);
 }
 
 void PersonController::remove(const httplib::Request &req,
@@ -89,9 +83,8 @@ void PersonController::remove(const httplib::Request &req,
     return;
   }
 
-  if (!_service->remove(*id)) {
-    res.status = StatusCode::NotFound_404;
-  }
+  auto result = _service->remove(*id);
+  handle_result(result, res);
 }
 
 } // namespace webapi::controllers

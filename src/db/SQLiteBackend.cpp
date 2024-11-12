@@ -20,7 +20,7 @@ SQLiteBackend::SQLiteBackend(std::string_view db_path) : _db_path(db_path) {
   }
 }
 
-IDType SQLiteBackend::get_table_last_id(std::string_view table_name) const {
+IDType SQLiteBackend::get_last_inserted_id() const {
   return sqlite3_last_insert_rowid(_handle.get());
 }
 

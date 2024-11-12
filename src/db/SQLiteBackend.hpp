@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "Result.hpp"
 #include "sqlite3.h"
 #include "typedefs.hpp"
 
@@ -24,13 +25,13 @@ public:
 
   // Return 0 if no insertion has been made since the creation of the connection
   // to the db.
-  IDType get_table_last_id(std::string_view table_name) const;
+  IDType get_last_inserted_id() const;
 
   std::string_view get_last_error() const;
 
-  // Return the number of affected rows, or -1 in case of error.
+  // Result.value contains the number of affected rows, if no error occured.
   template <typename T>
-  int query(const std::string &statement, T &&callback) const {
+  Result<int> query(const std::string &statement, T &&callback) const {
     std::println("db: Running query '{}'", statement);
     sqlite3_stmt *stmt = nullptr;
 
@@ -39,7 +40,7 @@ public:
     if (res != SQLITE_OK) {
       std::println("db: Failed to prepare SQL statement : {}",
                    sqlite3_errmsg(_handle.get()));
-      return -1;
+      return Result<int>{.code = SQL_ERROR, .message = messages::SQL_ERROR};
     }
 
     res = sqlite3_step(stmt);
@@ -53,11 +54,11 @@ public:
     if (res != SQLITE_DONE) {
       std::println("db: Sqlite statement '{}' encountered error on step #{} : ",
                    statement, count, sqlite3_errmsg(_handle.get()));
-      return -1;
+      return Result<int>{.code = SQL_ERROR, .message = messages::SQL_ERROR};
     }
 
     sqlite3_finalize(stmt);
-    return count;
+    return Result<int>{.value = count};
   }
 
 private:

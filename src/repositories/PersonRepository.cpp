@@ -12,56 +12,79 @@ PersonRepository::PersonRepository(db::SQLiteBackend *backend)
       "person", {"firstname STRING", "lastname STRING", "age INTEGER"});
 }
 
-std::optional<IDType> PersonRepository::create(const entities::Person &person) {
+Result<IDType> PersonRepository::create(const Person &person) {
   std::string statement =
       std::format("INSERT INTO {} "
                   "(firstname, lastname, age) "
                   "VALUES('{}', '{}', '{}');",
                   _name, person.firstname, person.lastname, person.age);
-  int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
 
-  if (res == -1) {
-    return std::nullopt;
+  auto backend_res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
+  if (backend_res.code != OK) {
+    return Result<IDType>{.code = backend_res.code,
+                          .message = backend_res.message};
   }
 
-  return _backend->get_table_last_id(_name);
+  return Result<IDType>{.value = _backend->get_last_inserted_id()};
 }
 
-std::optional<entities::Person> PersonRepository::read(IDType id) {
+Result<Person> PersonRepository::read(IDType id) {
   Person p;
   std::string stmt = std::format("SELECT * FROM {} WHERE id = {};", _name, id);
-  int res = _backend->query(stmt, [&p](sqlite3_stmt *stmt) {
+  auto backend_res = _backend->query(stmt, [&p](sqlite3_stmt *stmt) {
     p.id = sqlite3_column_int64(stmt, 0);
     p.firstname = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
     p.lastname = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
     p.age = sqlite3_column_int(stmt, 3);
   });
 
-  if (res == -1) {
-    return std::nullopt;
+  if (backend_res.code != OK) {
+    return Result<Person>{.code = backend_res.code,
+                          .message = backend_res.message};
   }
 
-  return p;
+  if (backend_res.value == 0) {
+    return Result<Person>{.code = ID_NOT_FOUND,
+                          .message = messages::ID_NOT_FOUND};
+  }
+
+  return Result<Person>{.value = p};
 }
 
-bool PersonRepository::update(IDType id, const entities::Person &person) {
+Result<> PersonRepository::update(IDType id, const Person &person) {
   std::string statement = std::format(
       "UPDATE {} "
-      "SET id = '{}', firstname = '{}', lastname = '{}', age = '{}'"
+      "SET firstname = '{}', lastname = '{}', age = '{}' "
       "WHERE id = {};",
       _name, person.id, person.firstname, person.lastname, person.age, id);
 
-  int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
-  return res != -1;
+  auto backend_res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
+  if (backend_res.code != OK) {
+    return Result<>{.code = backend_res.code, .message = backend_res.message};
+  }
+
+  if (backend_res.value == 0) {
+    return Result<>{.code = ID_NOT_FOUND, .message = messages::ID_NOT_FOUND};
+  }
+
+  return Result<>();
 }
 
-bool PersonRepository::remove(IDType id) {
+Result<> PersonRepository::remove(IDType id) {
   std::string statement = std::format("DELETE FROM {} "
                                       "WHERE id = {};",
                                       _name, id);
 
-  int res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
-  return res != -1;
+  auto backend_res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
+  if (backend_res.code != OK) {
+    return Result<>{.code = backend_res.code, .message = backend_res.message};
+  }
+
+  if (backend_res.value == 0) {
+    return Result<>{.code = ID_NOT_FOUND, .message = messages::ID_NOT_FOUND};
+  }
+
+  return Result<>();
 }
 
 } // namespace webapi::repositories
