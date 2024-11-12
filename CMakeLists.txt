@@ -7,7 +7,7 @@ FetchContent_Declare(
     vcpkg
     GIT_REPOSITORY https://github.com/microsoft/vcpkg
     GIT_TAG 2024.10.21
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/vcpkg
+    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/vcpkg
 )
 FetchContent_MakeAvailable(vcpkg)
 

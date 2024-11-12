@@ -39,11 +39,11 @@ void PersonController::create(const httplib::Request &req,
   if (!p_id.has_value()) {
     res.set_content("Failed to create person entity", "text/plain");
     res.status = StatusCode::BadRequest_400;
+    return;
   }
 
   p->id = *p_id;
   res.set_content(json(*p).dump(), "application/json");
-  res.status = StatusCode::OK_200;
 }
 
 void PersonController::read(const httplib::Request &req,
@@ -89,8 +89,9 @@ void PersonController::remove(const httplib::Request &req,
     return;
   }
 
-  bool ok = _service->remove(*id);
-  res.status = ok ? StatusCode::OK_200 : StatusCode::NotFound_404;
+  if (!_service->remove(*id)) {
+    res.status = StatusCode::NotFound_404;
+  }
 }
 
 } // namespace webapi::controllers

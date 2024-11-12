@@ -9,7 +9,6 @@
 
 namespace webapi::controllers {
 
-// Return 0 if parsing fails.
 std::optional<IDType> parse_id(const httplib::Request &req,
                                httplib::Response &res);
 
