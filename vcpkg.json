@@ -2,15 +2,9 @@
     "name": "webapi",
     "version": "0.0.1",
     "dependencies": [
-        {
-            "name": "cpp-httplib",
-            "default-features": false
-        },
+        "cpp-httplib",
         "jwt-cpp",
-        {
-            "name": "nlohmann-json",
-            "default-features": false
-        },
+        "nlohmann-json",
         "sqlite3"
     ]
 }
