@@ -52,19 +52,15 @@ Result<Person> PersonRepository::read(IDType id) {
 }
 
 Result<> PersonRepository::update(IDType id, const Person &person) {
-  std::string statement = std::format(
-      "UPDATE {} "
-      "SET firstname = '{}', lastname = '{}', age = '{}' "
-      "WHERE id = {};",
-      _name, person.id, person.firstname, person.lastname, person.age, id);
+  std::string statement =
+      std::format("UPDATE {} "
+                  "SET firstname = '{}', lastname = '{}', age = '{}' "
+                  "WHERE id = {};",
+                  _name, person.firstname, person.lastname, person.age, id);
 
   auto backend_res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
   if (backend_res.code != OK) {
     return Result<>{.code = backend_res.code, .message = backend_res.message};
-  }
-
-  if (backend_res.value == 0) {
-    return Result<>{.code = ID_NOT_FOUND, .message = messages::ID_NOT_FOUND};
   }
 
   return Result<>();
@@ -78,10 +74,6 @@ Result<> PersonRepository::remove(IDType id) {
   auto backend_res = _backend->query(statement, [](sqlite3_stmt *stmt) { ; });
   if (backend_res.code != OK) {
     return Result<>{.code = backend_res.code, .message = backend_res.message};
-  }
-
-  if (backend_res.value == 0) {
-    return Result<>{.code = ID_NOT_FOUND, .message = messages::ID_NOT_FOUND};
   }
 
   return Result<>();
