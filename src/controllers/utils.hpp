@@ -30,19 +30,22 @@ std::optional<T> parse_entity_from_body(const httplib::Request &req,
 // Return true if `result.code != OK` to indicate the presence of an error.
 template <typename T>
 bool handle_result(const Result<T> &result, httplib::Response &res) {
-  if (result.code == SQL_ERROR) {
+  switch (result.code) {
+  case OK:
+    return false;
+  case SQL_ERROR:
     res.set_content(result.message, "text/plain");
     res.status = httplib::StatusCode::InternalServerError_500;
     return true;
-  }
-
-  if (result.code == ID_NOT_FOUND) {
+  case ID_NOT_FOUND:
     res.set_content(result.message, "text/plain");
     res.status = httplib::StatusCode::NotFound_404;
     return true;
+  default:
+    res.set_content("Unknown server error", "text/plain");
+    res.status = httplib::StatusCode::InternalServerError_500;
+    return true;
   }
-
-  return false;
 }
 
 } // namespace webapi::controllers
