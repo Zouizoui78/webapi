@@ -2,15 +2,20 @@
 <html>
 
 <body>
-    <div>
-        <label for="method-select">Method:</label>
-        <select name="method" id="method-select">
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-            <option value="PUT">PUT</option>
-            <option value="DELETE">DELETE</option>
-        </select>
-    </div>
+    <span>Method: </span>
+    <span>
+        <input type="radio" id="method-choice1" name="method-select" value="GET" checked />
+        <label for="contactChoice1">GET</label>
+
+        <input type="radio" id="method-choice2" name="method-select" value="POST" />
+        <label for="contactChoice2">POST</label>
+
+        <input type="radio" id="method-choice3" name="method-select" value="PUT" />
+        <label for="contactChoice3">PUT</label>
+
+        <input type="radio" id="method-choice3" name="method-select" value="DELETE" />
+        <label for="contactChoice3">DELETE</label>
+    </span>
 
     <div>
         <label for="route-input">/api/</label>

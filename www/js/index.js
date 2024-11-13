@@ -1,4 +1,3 @@
-const method_input = document.getElementById("method-select");
 const route_input = document.getElementById("route-input");
 const data_input = document.getElementById("data-input");
 const send_button = document.getElementById("send-button");
@@ -6,7 +5,7 @@ const response_text = document.getElementById("response-text");
 
 async function send_request() {
     let options = {
-        method: method_input.options[method_input.selectedIndex].text
+        method: document.querySelector('input[name="method-select"]:checked').value
     };
 
     if (["POST", "PUT"].includes(options.method)) {
