@@ -15,6 +15,12 @@ public:
   Repository(db::SQLiteBackend *backend, std::string_view table_name,
              const std::vector<std::string> &columns);
 
+  virtual ~Repository() = default;
+  Repository(const Repository &other) = delete;
+  Repository(Repository &&other) = delete;
+  Repository &operator=(const Repository &other) = delete;
+  Repository &operator=(Repository &&other) = delete;
+
   Result<bool> id_exists(IDType id);
 
 protected:
