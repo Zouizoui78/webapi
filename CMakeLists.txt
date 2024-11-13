@@ -31,6 +31,8 @@ set(SRC
     src/entities/serialization.cpp
     src/repositories/PersonRepository.hpp
     src/repositories/PersonRepository.cpp
+    src/repositories/Repository.hpp
+    src/repositories/Repository.cpp
     src/services/PersonService.hpp
     src/services/PersonService.cpp
 )

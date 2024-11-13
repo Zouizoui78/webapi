@@ -24,8 +24,9 @@ IDType SQLiteBackend::get_last_inserted_id() const {
   return sqlite3_last_insert_rowid(_handle.get());
 }
 
-bool SQLiteBackend::create_table(std::string_view table_name,
-                                 const std::vector<std::string> &columns) {
+bool SQLiteBackend::create_table(
+    std::string_view table_name,
+    const std::vector<std::string> &columns) const {
   std::string statement = std::format(
       "CREATE TABLE IF NOT EXISTS {} (id INTEGER PRIMARY KEY,", table_name);
   for (const std::string &column : columns) {
@@ -37,20 +38,17 @@ bool SQLiteBackend::create_table(std::string_view table_name,
   std::println("db: Creating table '{}' with statement '{}'", table_name,
                statement);
 
+  char *error_msg;
   int res = sqlite3_exec(_handle.get(), statement.c_str(), nullptr, nullptr,
-                         &_sqlite_error_buff);
+                         &error_msg);
   if (res != SQLITE_OK) {
-    _last_error = std::format("db: Failed to create table {} : {}", table_name,
-                              _sqlite_error_buff);
-    sqlite3_free(_sqlite_error_buff);
-    return false;
+    std::string msg(std::format("db: Failed to create table {} : {}",
+                                table_name, error_msg));
+    sqlite3_free(error_msg);
+    throw std::runtime_error(msg);
   }
 
   return true;
-}
-
-std::string_view SQLiteBackend::get_last_error() const {
-  return _sqlite_error_buff;
 }
 
 void SQLiteBackend::Sqlite3Deleter::operator()(sqlite3 *handle) {

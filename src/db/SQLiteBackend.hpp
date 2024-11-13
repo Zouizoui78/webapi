@@ -21,22 +21,20 @@ public:
   SQLiteBackend &operator=(SQLiteBackend &&other) = delete;
 
   bool create_table(std::string_view table_name,
-                    const std::vector<std::string> &columns);
+                    const std::vector<std::string> &columns) const;
 
   // Return 0 if no insertion has been made since the creation of the connection
   // to the db.
   IDType get_last_inserted_id() const;
 
-  std::string_view get_last_error() const;
-
   // Result.value contains the number of affected rows, if no error occured.
   template <typename T>
-  Result<int> query(const std::string &statement, T &&callback) const {
+  Result<int> query(std::string_view statement, T &&callback) const {
     std::println("db: Running query '{}'", statement);
     sqlite3_stmt *stmt = nullptr;
 
-    int res = sqlite3_prepare_v2(_handle.get(), statement.c_str(), -1, &stmt,
-                                 nullptr);
+    int res =
+        sqlite3_prepare_v2(_handle.get(), statement.data(), -1, &stmt, nullptr);
     if (res != SQLITE_OK) {
       std::println("db: Failed to prepare SQL statement : {}",
                    sqlite3_errmsg(_handle.get()));
@@ -61,14 +59,17 @@ public:
     return Result<int>{.value = count};
   }
 
+  // Result.value contains the number of affected rows, if no error occured.
+  Result<int> query(std::string_view statement) const {
+    return query(statement, [](sqlite3_stmt *stmt) {});
+  }
+
 private:
   struct Sqlite3Deleter {
     void operator()(sqlite3 *handle);
   };
 
   std::unique_ptr<sqlite3, Sqlite3Deleter> _handle;
-  char *_sqlite_error_buff;
-  std::string _last_error;
 
   std::string _db_path;
 };
