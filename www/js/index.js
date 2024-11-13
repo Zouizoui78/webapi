@@ -1,15 +1,21 @@
 const route_input = document.getElementById("route-input");
+const auth_input = document.getElementById("auth-input");
 const data_input = document.getElementById("data-input");
 const send_button = document.getElementById("send-button");
 const response_text = document.getElementById("response-text");
 
 async function send_request() {
     let options = {
-        method: document.querySelector('input[name="method-select"]:checked').value
+        method: document.querySelector('input[name="method-select"]:checked').value,
+        headers: {}
     };
 
     if (["POST", "PUT"].includes(options.method)) {
         options.body = data_input.value;
+    }
+
+    if (auth_input.value !== "") {
+        options.headers["Authorization"] = auth_input.value;
     }
 
     const response = await fetch("/api/" + route_input.value, options);

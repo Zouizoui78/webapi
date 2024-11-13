@@ -34,18 +34,28 @@ bool handle_result(const Result<T> &result, httplib::Response &res) {
   case OK:
     return false;
   case SQL_ERROR:
-    res.set_content(result.message, "text/plain");
     res.status = httplib::StatusCode::InternalServerError_500;
-    return true;
+    break;
   case ID_NOT_FOUND:
-    res.set_content(result.message, "text/plain");
     res.status = httplib::StatusCode::NotFound_404;
-    return true;
+    break;
+  case AUTH_INVALID_TOKEN:
+  case AUTH_BASIC_LOGIN_ONLY:
+  case PASSWORD_VALIDATION_FAILED:
+    res.status = httplib::StatusCode::BadRequest_400;
+    break;
+  case AUTH_WRONG_PASSWORD:
+  case USER_NOT_FOUND:
+    res.status = httplib::StatusCode::Unauthorized_401;
+    break;
   default:
     res.set_content("Unknown server error", "text/plain");
     res.status = httplib::StatusCode::InternalServerError_500;
     return true;
   }
+
+  res.set_content(result.message, "text/plain");
+  return true;
 }
 
 } // namespace webapi::controllers

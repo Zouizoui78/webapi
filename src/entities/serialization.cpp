@@ -13,6 +13,12 @@ void from_json(const json &j, User &p) {
     j.at("id").get_to(p.id);
   }
 
+  if (j.contains("password")) {
+    std::string plain = j.at("password");
+    std::size_t hash = std::hash<std::string>{}(plain);
+    p.password = std::to_string(hash);
+  }
+
   j.at("name").get_to(p.name);
   j.at("admin").get_to(p.admin);
 }

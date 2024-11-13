@@ -7,14 +7,20 @@ namespace webapi::repositories {
 using namespace entities;
 
 UserRepository::UserRepository(db::SQLiteBackend *backend)
-    : Repository(backend, "user", {"name STRING", "admin INTEGER"}) {}
+    : Repository(backend, "user",
+                 {"name TEXT", "password TEXT", "admin INTEGER"}) {}
 
 Result<IDType> UserRepository::create(const User &user) {
-  std::string statement =
-      std::format("INSERT INTO {} "
-                  "(name, admin) "
-                  "VALUES('{}', '{}');",
-                  _table_name, user.name, static_cast<int>(user.admin));
+  if (user.password.empty()) {
+    return Result<IDType>{.code = PASSWORD_VALIDATION_FAILED,
+                          .message = messages::PASSWORD_VALIDATION_FAILED};
+  }
+
+  std::string statement = std::format("INSERT INTO {} "
+                                      "(name, password, admin) "
+                                      "VALUES('{}', '{}', '{}');",
+                                      _table_name, user.name, user.password,
+                                      static_cast<int>(user.admin));
 
   auto backend_res = _backend->query(statement);
   if (backend_res.code != OK) {
@@ -59,11 +65,15 @@ Result<> UserRepository::update(IDType id, const User &user) {
     return Result<>{.code = ID_NOT_FOUND, .message = messages::ID_NOT_FOUND};
   }
 
-  std::string statement =
-      std::format("UPDATE {} "
-                  "SET name = '{}', admin = '{}' "
-                  "WHERE id = {};",
-                  _table_name, user.name, static_cast<int>(user.admin), id);
+  std::string password = user.password.empty()
+                             ? get_user_password(user.name).value.value()
+                             : user.password;
+
+  std::string statement = std::format(
+      "UPDATE {} "
+      "SET name = '{}', password = '{}', admin = '{}' "
+      "WHERE id = {};",
+      _table_name, user.name, password, static_cast<int>(user.admin), id);
 
   auto backend_res = _backend->query(statement);
   if (backend_res.code != OK) {
@@ -94,6 +104,29 @@ Result<> UserRepository::remove(IDType id) {
   }
 
   return Result<>();
+}
+
+Result<std::string> UserRepository::get_user_password(std::string_view name) {
+  std::string password;
+  std::string query = std::format("SELECT password FROM {} WHERE name = '{}';",
+                                  _table_name, name);
+  auto backend_res = _backend->query(query, [&password](sqlite3_stmt *stmt) {
+    const char *p =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+    password = std::string(
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+  });
+  if (backend_res.code != OK) {
+    return Result<std::string>{.code = backend_res.code,
+                               .message = backend_res.message};
+  }
+
+  if (password.empty()) {
+    return Result<std::string>{.code = USER_NOT_FOUND,
+                               .message = messages::USER_NOT_FOUND};
+  }
+
+  return Result<std::string>{.value = password};
 }
 
 } // namespace webapi::repositories

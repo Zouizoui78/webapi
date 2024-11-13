@@ -15,6 +15,8 @@ public:
   Result<entities::User> read(IDType id);
   Result<> update(IDType id, const entities::User &user);
   Result<> remove(IDType id);
+
+  Result<std::string> get_user_password(std::string_view name);
 };
 
 } // namespace webapi::repositories

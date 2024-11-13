@@ -18,4 +18,8 @@ Result<> UserService::update(IDType id, const entities::User &user) {
 
 Result<> UserService::remove(IDType id) { return _repo->remove(id); }
 
+Result<std::string> UserService::get_user_password(std::string_view name) {
+  return _repo->get_user_password(name);
+}
+
 } // namespace webapi::services

@@ -6,15 +6,17 @@
 #include <string>
 #include <unordered_map>
 
+#include "auth/BasicAuthenticator.hpp"
 #include "controllers/IController.hpp"
 
 class SQLiteBackend;
 
 namespace webapi {
 
-class HTTPServer : public httplib::Server {
+class HTTPServer final : public httplib::Server {
 public:
-  HTTPServer(std::string_view web_ui_path);
+  HTTPServer(std::string_view web_ui_path,
+             const auth::BasicAuthenticator *basic_authenticator);
 
   // Return false if a controller with the same name is already registered, true
   // otherwise.
@@ -28,6 +30,9 @@ public:
                        httplib::Server::Handler handler);
 
 private:
+  void login(const httplib::Request &req, httplib::Response &res) const;
+
+  const auth::BasicAuthenticator *_basic_authenticator;
   std::unordered_map<std::string, std::unique_ptr<controllers::IController>>
       _controllers;
 };

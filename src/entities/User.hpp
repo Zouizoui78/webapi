@@ -11,6 +11,7 @@ namespace webapi::entities {
 struct User {
   IDType id = 0;
   std::string name = "";
+  std::string password = "";
   bool admin = false;
 };
 

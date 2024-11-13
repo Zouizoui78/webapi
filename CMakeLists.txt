@@ -18,8 +18,13 @@ project(webapi)
 set(SRC
     src/HTTPServer.hpp
     src/HTTPServer.cpp
+    src/base64.h
+    src/base64.cpp
     src/main.cpp
     src/typedefs.hpp
+    src/auth/BasicAuthenticator.hpp
+    src/auth/BasicAuthenticator.cpp
+    src/auth/IAuthenticator.hpp
     src/controllers/IController.hpp
     src/controllers/UserController.hpp
     src/controllers/UserController.cpp

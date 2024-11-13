@@ -5,6 +5,7 @@
 
 #include "HTTPServer.hpp"
 
+#include "auth/BasicAuthenticator.hpp"
 #include "controllers/UserController.hpp"
 #include "db/SQLiteBackend.hpp"
 #include "repositories/UserRepository.hpp"
@@ -23,8 +24,9 @@ int main(void) {
   db::SQLiteBackend sqlite("webapi.db");
   repositories::UserRepository user_repo(&sqlite);
   services::UserService user_service(&user_repo);
+  auth::BasicAuthenticator basic_authenticator(&user_service);
 
-  HTTPServer server("www");
+  HTTPServer server("www", &basic_authenticator);
   server.register_controller(
       std::make_unique<controllers::UserController>(&user_service));
 

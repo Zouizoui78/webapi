@@ -8,7 +8,7 @@
 
 namespace webapi::controllers {
 
-class UserController : public IController {
+class UserController final : public IController {
 public:
   UserController(services::UserService *service);
 
