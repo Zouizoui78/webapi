@@ -21,20 +21,20 @@ set(SRC
     src/main.cpp
     src/typedefs.hpp
     src/controllers/IController.hpp
-    src/controllers/PersonController.hpp
-    src/controllers/PersonController.cpp
+    src/controllers/UserController.hpp
+    src/controllers/UserController.cpp
     src/controllers/utils.hpp
     src/controllers/utils.cpp
     src/db/SQLiteBackend.hpp
     src/db/SQLiteBackend.cpp
-    src/entities/Person.hpp
+    src/entities/User.hpp
     src/entities/serialization.cpp
-    src/repositories/PersonRepository.hpp
-    src/repositories/PersonRepository.cpp
+    src/repositories/UserRepository.hpp
+    src/repositories/UserRepository.cpp
     src/repositories/Repository.hpp
     src/repositories/Repository.cpp
-    src/services/PersonService.hpp
-    src/services/PersonService.cpp
+    src/services/UserService.hpp
+    src/services/UserService.cpp
 )
 
 add_executable(webapi ${SRC})

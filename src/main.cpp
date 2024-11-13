@@ -5,10 +5,10 @@
 
 #include "HTTPServer.hpp"
 
-#include "controllers/PersonController.hpp"
+#include "controllers/UserController.hpp"
 #include "db/SQLiteBackend.hpp"
-#include "repositories/PersonRepository.hpp"
-#include "services/PersonService.hpp"
+#include "repositories/UserRepository.hpp"
+#include "services/UserService.hpp"
 
 std::function<void(int)> signal_handler;
 void c_signal_handler(int signal) { signal_handler(signal); }
@@ -21,12 +21,12 @@ int main(void) {
   }
 
   db::SQLiteBackend sqlite("webapi.db");
-  repositories::PersonRepository person_repo(&sqlite);
-  services::PersonService person_service(&person_repo);
+  repositories::UserRepository user_repo(&sqlite);
+  services::UserService user_service(&user_repo);
 
   HTTPServer server("www");
   server.register_controller(
-      std::make_unique<controllers::PersonController>(&person_service));
+      std::make_unique<controllers::UserController>(&user_service));
 
   signal_handler = [&server](int signal) {
     std::println("main: Received signal '{}'", strsignal(signal));
